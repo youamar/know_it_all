@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Know It All</string>
-    <string name="emailBar">Enter your e-mail address…</string>
-    <string name="loginButton">Connexion</string>
-    <string name="about_text">Nom : OUAMAR\nPrénom : Yahya\nMatricule : 54915</string>
+    <string name="emailBar">Enter your email address…</string>
+    <string name="loginButton">Login</string>
+    <string name="about_text">Last name : OUAMAR\nFirst name : Yahya\nRegistration number : 54915</string>
 </resources>
