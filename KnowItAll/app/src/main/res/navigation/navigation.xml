@@ -8,6 +8,11 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.knowitall.LoginFragment"
-        android:label="fragment_login"
+        android:label="Know It All"
         tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.knowitall.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
 </navigation>
