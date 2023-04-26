@@ -1,13 +1,12 @@
 package com.example.knowitall
 
 import android.os.Bundle
-import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.knowitall.databinding.FragmentLoginBinding
 
 /**
@@ -16,22 +15,19 @@ import com.example.knowitall.databinding.FragmentLoginBinding
  * create an instance of this fragment.
  */
 class LoginFragment : Fragment() {
-
+    private lateinit var viewModel: LoginViewModel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater,
-            R.layout.fragment_login, container, false)
-
-        binding.loginButton.setOnClickListener { view: View ->
-            val email = binding.editTextTextEmailAddress.text.toString()
-            if (Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                Toast.makeText(context, "Valid address !", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Invalid address !", Toast.LENGTH_SHORT).show()
-            }
-        }
+        val binding = DataBindingUtil.inflate<FragmentLoginBinding>(inflater, R.layout.fragment_login, container, false)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext())).get(LoginViewModel::class.java)
+        // Set the viewmodel for databinding - this allows the bound layout access
+        // to all the data in the ViewModel
+        binding.loginViewModel = viewModel
+        // Specify the fragment view as the lifecycle owner of the binding.
+        // This is used so that the binding can observe LiveData updates
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
