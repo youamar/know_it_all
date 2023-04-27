@@ -10,6 +10,7 @@ Qu'il s'agisse d'animaux, d'histoire, d'art, de science ou de culture, vous ne m
 
 ## Persistance des données
 
+Une liste des dernières connexions est stockée localement dans l'appareil.
 
 ## Backend
 
