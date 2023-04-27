@@ -1,4 +1,4 @@
-package com.example.knowitall
+package com.example.knowitall.screens.login
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
