@@ -1,16 +1,20 @@
 package com.example.knowitall
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
 import androidx.room.Room
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.knowitall.database.LoginDatabase
 import com.example.knowitall.database.UserLogin
 import com.example.knowitall.database.UserLoginDao
-import org.junit.Assert.assertEquals
 import org.junit.After
-import org.junit.Before
+
 import org.junit.Test
 import org.junit.runner.RunWith
+
+import org.junit.Assert.*
+import org.junit.Before
 import java.io.IOException
 
 /**
@@ -18,7 +22,6 @@ import java.io.IOException
  * include tests. However, when building the Room, it is helpful to make sure it works before
  * adding the UI.
  */
-
 @RunWith(AndroidJUnit4::class)
 class LoginDatabaseTest {
 
@@ -46,9 +49,10 @@ class LoginDatabaseTest {
     @Test
     @Throws(Exception::class)
     fun insertAndGetLogin() {
-        val userLogin = UserLogin()
+        val currentTime = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().time)
+        val userLogin = UserLogin("54915@etu.he2b.be",currentTime)
         loginDao.insert(userLogin)
         val latestLogin = loginDao.getLatestLogin()
-        assertEquals(latestLogin?.loginTimestamp , -1)
+        assertEquals(latestLogin?.loginTimestamp , currentTime)
     }
 }
