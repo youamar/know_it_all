@@ -26,6 +26,7 @@ abstract class LoginDatabase : RoomDatabase() {
                         "user_login_timestamp_database"
                     )
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
                         .build()
                     INSTANCE = instance
                 }

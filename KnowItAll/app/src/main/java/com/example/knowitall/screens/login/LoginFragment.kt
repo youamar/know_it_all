@@ -41,7 +41,7 @@ class LoginFragment : Fragment() {
         viewModel.getEmails()
         viewModel.emails.observe(viewLifecycleOwner) { emails ->
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, emails)
-            binding.emailSpinner.adapter = adapter
+            binding.editTextTextEmailAddress.setAdapter(adapter)
         }
     }
 }
