@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentLoginBinding
 
+//FIXME (QHB) :remove those default comments
 /**
  * A simple [Fragment] subclass.
  * Use the [LoginFragment.newInstance] factory method to

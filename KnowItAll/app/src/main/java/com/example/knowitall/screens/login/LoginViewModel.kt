@@ -34,10 +34,14 @@ class LoginViewModel(private val context: Context) : ViewModel() {
     fun validateEmail(email: String){
         _email.value = email
         _currentTime.value = SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(Calendar.getInstance().time)
+        //FIXME (QHB) :this line is too long. Split it in several lines.
         if (_email.value?.let { Patterns.EMAIL_ADDRESS.matcher(it).matches() } == true){
+            //FIXME (QHB) :never use UI related components here. The ViewModel is not supposed to know
+            // anything about the UI. This should go in the Fragment.
             Toast.makeText(context, "Valid !", Toast.LENGTH_SHORT).show()
             val userLogin = dao.get(email)
             if(userLogin != null) {
+                //FIXME (QHB) :  Avoid using the operator !!. This bypass the Kotlin security mechanism to avoid nullpointer exception.
                 userLogin.loginTimestamp = _currentTime.value!!
                 dao.update(userLogin)
             } else {
@@ -45,9 +49,13 @@ class LoginViewModel(private val context: Context) : ViewModel() {
             }
         }
         else{
+            //FIXME (QHB) : Ui text should not be hardcoded in kotlin file. You can use strings.xml instead.
             Toast.makeText(context, "Invalid !", Toast.LENGTH_SHORT).show()
         }
     }
+    //FIXME (QHB) :this should be called from the init method. The getEmails method does not
+    // perform any actual read in the database. It just returns an observable that will notify if
+    // any change occurs in the emails data.
     fun getEmails() {
         _emails.value = dao.getAllEmails()
     }
