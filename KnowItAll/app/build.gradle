@@ -42,6 +42,7 @@ android {
 }
 
 dependencies {
+    // FIXME QHB : avoid using old versions of libraries for no reason
     implementation 'androidx.test:core-ktx:1.5.0'
     androidTestImplementation project(path: ':app')
     // Android KTX
