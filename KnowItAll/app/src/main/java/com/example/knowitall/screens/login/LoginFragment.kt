@@ -6,17 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentLoginBinding
 
-//FIXME (QHB) :remove those default comments
-/**
- * A simple [Fragment] subclass.
- * Use the [LoginFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class LoginFragment : Fragment() {
     private lateinit var viewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
@@ -26,7 +21,10 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext())).get(LoginViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(requireContext())
+        ).get(LoginViewModel::class.java)
         // Set the viewmodel for databinding - this allows the bound layout access
         // to all the data in the ViewModel
         binding.loginViewModel = viewModel
@@ -39,10 +37,21 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getEmails()
         viewModel.emails.observe(viewLifecycleOwner) { emails ->
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, emails)
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, emails)
             binding.editTextTextEmailAddress.setAdapter(adapter)
+        }
+        viewModel.isValidEmail.observe(viewLifecycleOwner) { isValid ->
+            if (isValid) {
+                Toast.makeText(requireContext(), R.string.valid_email, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(requireContext(), R.string.invalid_email, Toast.LENGTH_SHORT).show()
+            }
+        }
+        binding.loginButton.setOnClickListener {
+            val email = binding.editTextTextEmailAddress.text.toString()
+            viewModel.validateEmail(email)
         }
     }
 }

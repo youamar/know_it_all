@@ -17,11 +17,6 @@ import org.junit.Assert.*
 import org.junit.Before
 import java.io.IOException
 
-/**
- * This is not meant to be a full set of tests. For simplicity, most of your samples do not
- * include tests. However, when building the Room, it is helpful to make sure it works before
- * adding the UI.
- */
 @RunWith(AndroidJUnit4::class)
 class LoginDatabaseTest {
 
