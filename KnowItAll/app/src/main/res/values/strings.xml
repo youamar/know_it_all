@@ -2,8 +2,17 @@
     <string name="app_name">Know It All</string>
     <string name="emailBar">Enter your email address…</string>
     <string name="loginButton">Login</string>
+    <string name="playButton">Play</string>
+    <string name="logoutButton">Logout</string>
     <string name="about_text">Last name : OUAMAR\nFirst name : Yahya\nRegistration number : 54915</string>
+    <string name="tomorrow_text">Come back tomorrow !</string>
+    <string name="logout_text">Are you sure you want to logout ?</string>
     <string name="about">About</string>
+    <string name="play">Play</string>
+    <string name="rules">Rules</string>
+    <string name="leaderboard">Leaderboard</string>
+    <string name="museums">Find Museums</string>
+    <string name="logout">Logout</string>
     <string name="invalid_email">Invalid !</string>
     <string name="valid_email">Valid !</string>
 </resources>
