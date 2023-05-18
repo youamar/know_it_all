@@ -24,16 +24,29 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/playFragment"
-        android:name="com.example.knowitall.screens.quiz.PlayFragment"
+        android:name="com.example.knowitall.screens.play.PlayFragment"
         android:label="Play"
         tools:layout="@layout/fragment_play" />
     <fragment
         android:id="@+id/logoutFragment"
-        android:name="com.example.knowitall.screens.login.LogoutFragment"
+        android:name="com.example.knowitall.screens.logout.LogoutFragment"
         android:label="Logout"
         tools:layout="@layout/fragment_logout" >
         <action
             android:id="@+id/action_logout"
             app:destination="@id/loginFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/rulesFragment"
+        android:name="com.example.knowitall.screens.rules.RulesFragment"
+        android:label="Rules"
+        tools:layout="@layout/fragment_rules" />
+    <fragment
+        android:id="@+id/leaderboardFragment"
+        android:name="com.example.knowitall.screens.leaderboard.LeaderboardFragment"
+        android:label="Leaderboard" />
+    <fragment
+        android:id="@+id/museumFragment"
+        android:name="com.example.knowitall.screens.museums.MuseumFragment"
+        android:label="Museums" />
 </navigation>

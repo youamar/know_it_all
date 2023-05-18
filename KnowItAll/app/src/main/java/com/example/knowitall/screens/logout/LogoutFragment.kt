@@ -1,4 +1,4 @@
-package com.example.knowitall.screens.login
+package com.example.knowitall.screens.logout
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

@@ -1,4 +1,4 @@
-package com.example.knowitall.screens.quiz
+package com.example.knowitall.screens.play
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

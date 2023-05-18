@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.knowitall.screens.quiz.PlayFragment">
+    tools:context="com.example.knowitall.screens.play.PlayFragment">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/playConstraint"
         android:layout_width="match_parent"

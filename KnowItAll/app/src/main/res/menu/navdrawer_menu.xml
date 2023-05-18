@@ -7,6 +7,10 @@
         android:icon="@android:drawable/ic_media_play"
         android:title="@string/play" />
     <item
+        android:id="@+id/museumsFragment"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/museums" />
+    <item
         android:id="@+id/aboutFragment"
         android:icon="@android:drawable/ic_menu_help"
         android:title="@string/about" />
@@ -18,10 +22,6 @@
         android:id="@+id/leaderboardFragment"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="@string/leaderboard" />
-    <item
-        android:id="@+id/museumsFragment"
-        android:icon="@android:drawable/ic_menu_search"
-        android:title="@string/museums" />
     <item
         android:id="@+id/logoutFragment"
         android:icon="@android:drawable/ic_menu_set_as"
