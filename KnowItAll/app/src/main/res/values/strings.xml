@@ -15,4 +15,5 @@
     <string name="logout">Logout</string>
     <string name="invalid_email">Invalid !</string>
     <string name="valid_email">Valid !</string>
+    <string name="museums_text">Find Nearest Museums</string>
 </resources>

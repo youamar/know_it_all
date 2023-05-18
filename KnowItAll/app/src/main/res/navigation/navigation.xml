@@ -9,7 +9,14 @@
         android:id="@+id/loginFragment"
         android:name="com.example.knowitall.screens.login.LoginFragment"
         android:label="Know It All"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_valid_login"
+            app:destination="@id/playFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
     <fragment
         android:id="@+id/aboutFragment"
         android:name="com.example.knowitall.screens.about.AboutFragment"
@@ -17,7 +24,16 @@
         tools:layout="@layout/fragment_about" />
     <fragment
         android:id="@+id/playFragment"
-        android:name="com.example.knowitall.screens.play.PlayFragment"
+        android:name="com.example.knowitall.screens.quiz.PlayFragment"
         android:label="Play"
         tools:layout="@layout/fragment_play" />
+    <fragment
+        android:id="@+id/logoutFragment"
+        android:name="com.example.knowitall.screens.login.LogoutFragment"
+        android:label="Logout"
+        tools:layout="@layout/fragment_logout" >
+        <action
+            android:id="@+id/action_logout"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
