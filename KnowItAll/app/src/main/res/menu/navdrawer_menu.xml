@@ -7,9 +7,13 @@
         android:icon="@android:drawable/ic_media_play"
         android:title="@string/play" />
     <item
-        android:id="@+id/museumsFragment"
+        android:id="@+id/museumFragment"
         android:icon="@android:drawable/ic_menu_search"
         android:title="@string/museums" />
+    <item
+        android:id="@+id/leaderboardFragment"
+        android:icon="@android:drawable/ic_menu_myplaces"
+        android:title="@string/leaderboard" />
     <item
         android:id="@+id/aboutFragment"
         android:icon="@android:drawable/ic_menu_help"
@@ -18,10 +22,6 @@
         android:id="@+id/rulesFragment"
         android:icon="@android:drawable/ic_menu_sort_by_size"
         android:title="@string/rules" />
-    <item
-        android:id="@+id/leaderboardFragment"
-        android:icon="@android:drawable/ic_menu_myplaces"
-        android:title="@string/leaderboard" />
     <item
         android:id="@+id/logoutFragment"
         android:icon="@android:drawable/ic_menu_set_as"

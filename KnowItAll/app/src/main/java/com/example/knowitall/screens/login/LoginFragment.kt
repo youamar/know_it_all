@@ -45,9 +45,7 @@ class LoginFragment : Fragment() {
         }
         viewModel.isValidEmail.observe(viewLifecycleOwner) { isValid ->
             if (isValid) {
-                val navController = findNavController()
                 Toast.makeText(requireContext(), R.string.valid_email, Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.action_valid_login)
             } else {
                 Toast.makeText(requireContext(), R.string.invalid_email, Toast.LENGTH_SHORT).show()
             }
