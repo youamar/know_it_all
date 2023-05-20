@@ -20,4 +20,6 @@ interface UserLoginDao {
     fun getLatestLogin(): UserLogin?
     @Query("SELECT email FROM user_login_timestamp_table ORDER BY login_timestamp DESC")
     fun getAllEmails(): List<String>
+    @Query("SELECT * FROM user_login_timestamp_table ORDER BY xp DESC")
+    fun getLeaderboard(): LiveData<List<UserLogin>>
 }

@@ -40,6 +40,7 @@ class LoginViewModel(private val context: Context) : ViewModel() {
         val currentTime = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
         val formattedTime = formatter.format(currentTime)
+        val randomXP = (0..100).random()
         _currentTime.value = formattedTime
         if (_email.value?.let { Patterns.EMAIL_ADDRESS.matcher(it).matches() } == true){
             _isValidEmail.value = true
@@ -48,8 +49,8 @@ class LoginViewModel(private val context: Context) : ViewModel() {
                 userLogin.loginTimestamp = _currentTime.value?.let { it } ?: return
                 dao.update(userLogin)
             } else {
-                val userLogin = UserLogin(email, _currentTime.value?.let { it } ?: return)
-                dao.insert(userLogin)
+                val newUserLogin = UserLogin(email, _currentTime.value?.let { it } ?: return, randomXP)
+                dao.insert(newUserLogin)
             }
         }
         else{

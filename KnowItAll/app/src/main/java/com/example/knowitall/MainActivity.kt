@@ -8,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.knowitall.databinding.ActivityMainBinding
+import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -19,6 +20,12 @@ class MainActivity : AppCompatActivity() {
         val navController = this.findNavController(R.id.myNavHostFragment)
         NavigationUI.setupActionBarWithNavController(this,navController, drawerLayout)
         NavigationUI.setupWithNavController(binding.navView, navController)
+        val navView = findViewById<NavigationView>(R.id.navView)
+        val playMenuItem = navView.menu.findItem(R.id.playFragment)
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>("isLoggedIn")
+            ?.observe(this) { isLoggedIn ->
+                playMenuItem.isEnabled = isLoggedIn
+            }
     }
 
     override fun onSupportNavigateUp(): Boolean {

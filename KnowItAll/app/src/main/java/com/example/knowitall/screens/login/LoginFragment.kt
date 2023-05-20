@@ -11,8 +11,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentLoginBinding
-import androidx.navigation.fragment.findNavController
-
 class LoginFragment : Fragment() {
     private lateinit var viewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
@@ -55,4 +53,5 @@ class LoginFragment : Fragment() {
             viewModel.validateEmail(email)
         }
     }
+
 }

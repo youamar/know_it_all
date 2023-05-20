@@ -9,6 +9,6 @@ data class UserLogin(
     @PrimaryKey
     var email: String = "",
     @ColumnInfo(name = "login_timestamp")
-    var loginTimestamp: String = ""
+    var loginTimestamp: String = "",
+    var xp: Int = 0
 )
-

@@ -23,4 +23,6 @@
     <string name="invalid_email">Invalid !</string>
     <string name="valid_email">Valid !</string>
     <string name="know_text">Know It All</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
 </resources>
