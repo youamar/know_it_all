@@ -8,16 +8,16 @@
         android:id="@+id/logoutConstraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/logoutText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/logout_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/logoutButton"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/logoutButton"
@@ -27,6 +27,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/logoutText" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

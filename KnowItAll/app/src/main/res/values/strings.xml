@@ -13,16 +13,14 @@
         \n\nTime Limit: You will have a limited amount of time to answer each question. Make sure to think quickly and efficiently to maximize your score.
         \n\nXP Points: For each correct answer, you will earn XP (Experience Points). The more correct answers you accumulate, the higher you will climb on the global leaderboard.
         \n\nLeaderboard: Compete with other users from around the world to see who can earn the highest score. Keep an eye on the leaderboard to track your progress and strive to reach the top.
-        \n\nChallenges: Want to prove your knowledge to your friends and family? Challenge them to a quiz and see who has the best general knowledge among you.
         \n\nLearning Experience: Know It All aims to make learning fun and addictive. You will be amazed at how much you can learn while having an enjoyable time and competing with others.
         \n\nRemember, the more you play and engage with the app, the more knowledge you will acquire. Good luck and have fun exploring the world of trivia and facts with Know It All!</string>
     <string name="rules">Rules</string>
     <string name="leaderboard">Leaderboard</string>
-    <string name="leaderboard_text">Leaderboard</string>
     <string name="museums">Search nearest museums</string>
+    <string name="area">Enter your address…</string>
     <string name="logout">Logout</string>
     <string name="invalid_email">Invalid !</string>
     <string name="valid_email">Valid !</string>
-    <string name="museums_text">Nearest Museums</string>
     <string name="know_text">Know It All</string>
 </resources>
