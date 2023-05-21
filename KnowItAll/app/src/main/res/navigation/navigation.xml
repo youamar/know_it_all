@@ -26,7 +26,11 @@
         android:id="@+id/playFragment"
         android:name="com.example.knowitall.screens.play.PlayFragment"
         android:label="Play"
-        tools:layout="@layout/fragment_play" />
+        tools:layout="@layout/fragment_play" >
+        <action
+            android:id="@+id/action_playFragment_to_contentFragment"
+            app:destination="@id/contentFragment" />
+    </fragment>
     <fragment
         android:id="@+id/logoutFragment"
         android:name="com.example.knowitall.screens.logout.LogoutFragment"
@@ -49,4 +53,30 @@
         android:id="@+id/museumFragment"
         android:name="com.example.knowitall.screens.museums.MuseumFragment"
         android:label="Museums" />
+    <fragment
+        android:id="@+id/contentFragment"
+        android:name="com.example.knowitall.screens.quiz.ContentFragment"
+        android:label="Know It All"
+        tools:layout="@layout/fragment_content" >
+        <action
+            android:id="@+id/action_contentFragment_to_quizFragment"
+            app:destination="@id/quizFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/quizFragment"
+        android:name="com.example.knowitall.screens.quiz.QuizFragment"
+        android:label="Quiz" >
+        <action
+            android:id="@+id/action_quizFragment_to_tomorrowFragment"
+            app:destination="@id/tomorrowFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tomorrowFragment"
+        android:name="com.example.knowitall.screens.quiz.TomorrowFragment"
+        android:label="Sent !"
+        tools:layout="@layout/fragment_tomorrow" >
+        <action
+            android:id="@+id/action_tomorrowFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>

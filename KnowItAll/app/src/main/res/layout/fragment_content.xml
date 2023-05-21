@@ -5,40 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context="com.example.knowitall.screens.quiz.TomorrowFragment">
+    tools:context="com.example.knowitall.screens.quiz.ContentFragment">
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
-            android:id="@+id/tomorrowText"
+            android:id="@+id/contentText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tomorrow_text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/startButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/okButton"
+            android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ok_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tomorrowText" />
-
-        <TextView
-            android:id="@+id/scoreText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/note_text"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#FF0000"
-            android:textSize="10sp"
+            android:text="@string/start_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contentText" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </ScrollView>
