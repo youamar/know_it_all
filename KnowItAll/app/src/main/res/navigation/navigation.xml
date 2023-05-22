@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_playFragment_to_contentFragment"
             app:destination="@id/contentFragment" />
+        <action
+            android:id="@+id/action_playFragment_to_errorFragment"
+            app:destination="@id/errorFragment" />
     </fragment>
     <fragment
         android:id="@+id/logoutFragment"
@@ -61,6 +64,9 @@
         <action
             android:id="@+id/action_contentFragment_to_quizFragment"
             app:destination="@id/quizFragment" />
+        <action
+            android:id="@+id/action_contentFragment_to_errorFragment"
+            app:destination="@id/errorFragment" />
     </fragment>
     <fragment
         android:id="@+id/quizFragment"
@@ -73,10 +79,17 @@
     <fragment
         android:id="@+id/tomorrowFragment"
         android:name="com.example.knowitall.screens.quiz.TomorrowFragment"
-        android:label="Sent !"
-        tools:layout="@layout/fragment_tomorrow" >
+        tools:layout="@layout/fragment_tomorrow">
         <action
             android:id="@+id/action_tomorrowFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/errorFragment"
+        android:name="com.example.knowitall.screens.play.ErrorFragment"
+        android:label="Error" >
+        <action
+            android:id="@+id/action_errorFragment_to_playFragment"
+            app:destination="@id/playFragment" />
     </fragment>
 </navigation>

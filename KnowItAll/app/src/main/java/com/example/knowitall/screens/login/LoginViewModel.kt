@@ -29,6 +29,16 @@ class LoginViewModel(private val context: Context) : ViewModel() {
         _email.value = ""
         _currentTime.value = ""
         _emails.value = dao.getAllEmails()
+        // insert 3 dummy users if the database is empty
+        if (dao.getAllEmails().isEmpty()) {
+            val userLogin1 = UserLogin("dummy@gmail.com", "01-01-1997 00:00:00", 0)
+            val userLogin2 = UserLogin("dummy2@gmail.com", "01-01-1997 00:00:00", 0)
+            val userLogin3 = UserLogin("dummy3@gmail.com", "01-01-1997 00:00:00", 0)
+            dao.insert(userLogin1)
+            dao.insert(userLogin2)
+            dao.insert(userLogin3)
+            _emails.value = dao.getAllEmails()
+        }
     }
     override fun onCleared() {
         super.onCleared()
@@ -40,7 +50,6 @@ class LoginViewModel(private val context: Context) : ViewModel() {
         val currentTime = Calendar.getInstance().time
         val formatter = SimpleDateFormat("dd-MM-yyyy HH:mm:ss")
         val formattedTime = formatter.format(currentTime)
-        val randomXP = (0..100).random()
         _currentTime.value = formattedTime
         if (_email.value?.let { Patterns.EMAIL_ADDRESS.matcher(it).matches() } == true){
             _isValidEmail.value = true
@@ -49,7 +58,7 @@ class LoginViewModel(private val context: Context) : ViewModel() {
                 userLogin.loginTimestamp = _currentTime.value?.let { it } ?: return
                 dao.update(userLogin)
             } else {
-                val newUserLogin = UserLogin(email, _currentTime.value?.let { it } ?: return, randomXP)
+                val newUserLogin = UserLogin(email, _currentTime.value?.let { it } ?: return, 0)
                 dao.insert(newUserLogin)
             }
         }

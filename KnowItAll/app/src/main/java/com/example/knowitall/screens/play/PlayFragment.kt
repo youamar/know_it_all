@@ -7,14 +7,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentPlayBinding
-import okhttp3.*
-import org.json.JSONObject
-import java.io.IOException
+import com.google.gson.annotations.SerializedName
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
 
 class PlayFragment : Fragment() {
     private lateinit var binding: FragmentPlayBinding
+    private lateinit var retrofit: Retrofit
+    private lateinit var wikiApi: WikiApiService
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,66 +34,86 @@ class PlayFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.playButton.setOnClickListener {
-            showLoadingView() // Show the loading view before fetching the content
+            showLoadingView()
             fetchRandomContent()
         }
     }
 
     private fun showLoadingView() {
-        // Show the loading view, hide other views if necessary
         binding.loadingView.visibility = View.VISIBLE
-        binding.playButton.isEnabled = false // Disable the play button while loading
+        binding.playButton.isEnabled = false
     }
 
     private fun hideLoadingView() {
-        // Hide the loading view, show other views if necessary
         binding.loadingView.visibility = View.GONE
-        binding.playButton.isEnabled = true // Enable the play button after loading
+        binding.playButton.isEnabled = true
     }
 
     private fun fetchRandomContent() {
-        val url = "https://en.wikipedia.org/w/api.php?action=query&format=json&generator=random&grnnamespace=0&grnlimit=1&prop=extracts&exintro=1&explaintext=1"
+        retrofit = Retrofit.Builder()
+            .baseUrl("https://en.wikipedia.org")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
-        val client = OkHttpClient()
-        val request = Request.Builder().url(url).build()
+        wikiApi = retrofit.create(WikiApiService::class.java)
 
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                hideLoadingView() // Hide the loading view in case of failure
-                // Handle the request failure
+        wikiApi.fetchRandomContent().enqueue(object : Callback<RandomContentResponse> {
+            override fun onFailure(call: Call<RandomContentResponse>, t: Throwable) {
+                requireActivity().runOnUiThread {
+                    hideLoadingView()
+                    findNavController().navigate(R.id.action_playFragment_to_errorFragment)
+                }
             }
 
-            // Inside onResponse method of fetchRandomContent function
-            override fun onResponse(call: Call, response: Response) {
-                val responseData = response.body?.string()
-                val titleAndContent = parseResponse(responseData)
+            override fun onResponse(call: Call<RandomContentResponse>, response: Response<RandomContentResponse>) {
+                if (response.isSuccessful) {
+                    val responseData = response.body()?.query?.pages?.values?.first()
+                    val titleAndContent = responseData?.let { parseResponse(it) }
 
-                if (titleAndContent.second.length >= 1500) {
-                    // Update UI on the main thread
-                    requireActivity().runOnUiThread {
-                        hideLoadingView() // Hide the loading view before navigating
-                        val bundle = Bundle().apply {
-                            putString("title", titleAndContent.first)
-                            putString("content", titleAndContent.second)
+                    if ((titleAndContent?.content?.length ?: 0) >= 1500) {
+                        // Update UI on the main thread
+                        requireActivity().runOnUiThread {
+                            hideLoadingView() // Hide the loading view before navigating
+                            val bundle = Bundle().apply {
+                                putString("title", titleAndContent?.title)
+                                putString("content", titleAndContent?.content)
+                            }
+                            findNavController().navigate(R.id.action_playFragment_to_contentFragment, bundle)
                         }
-                        findNavController().navigate(R.id.action_playFragment_to_contentFragment, bundle)
+                    } else {
+                        fetchRandomContent()
                     }
                 } else {
-                    // Content is not long enough, fetch again
-                    fetchRandomContent()
+                    onFailure(call, Throwable("Unsuccessful response"))
                 }
             }
         })
     }
 
-    private fun parseResponse(responseData: String?): Pair<String, String> {
-        val jsonObject = JSONObject(responseData)
-        val pages = jsonObject.getJSONObject("query").getJSONObject("pages")
-        val pageId = pages.keys().next()
-        val page = pages.getJSONObject(pageId)
-        val title = page.getString("title")
-        val content = page.getString("extract")
+    private fun parseResponse(responseData: RandomContentResponseData): TitleAndContent {
+        val title = responseData.title
+        val content = responseData.extract
 
-        return Pair(title, content)
+        return TitleAndContent(title, content)
     }
+
+    private data class TitleAndContent(val title: String, val content: String)
+
+    interface WikiApiService {
+        @GET("/w/api.php?action=query&format=json&generator=random&grnnamespace=0&grnlimit=1&prop=extracts&exintro=1&explaintext=1")
+        fun fetchRandomContent(): Call<RandomContentResponse>
+    }
+
+    data class RandomContentResponse(
+        @SerializedName("query") val query: RandomContentResponseQuery
+    )
+
+    data class RandomContentResponseQuery(
+        @SerializedName("pages") val pages: Map<String, RandomContentResponseData>
+    )
+
+    data class RandomContentResponseData(
+        @SerializedName("title") val title: String,
+        @SerializedName("extract") val extract: String
+    )
 }

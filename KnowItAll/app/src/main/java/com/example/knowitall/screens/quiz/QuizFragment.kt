@@ -6,28 +6,40 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 
 class QuizFragment : Fragment() {
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var submitButton: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_quiz, container, false)
+        val view = inflater.inflate(R.layout.fragment_quiz, container, false)
+        recyclerView = view.findViewById(R.id.quizRecyclerView)
+        submitButton = view.findViewById(R.id.submitButton)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         val actionBar = (activity as MainActivity).supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(false)
-        val submitButton = view.findViewById<Button>(R.id.submitButton)
-        submitButton.setOnClickListener {
-            findNavController().navigate(R.id.action_quizFragment_to_tomorrowFragment)
+        super.onViewCreated(view, savedInstanceState)
+
+        val questions = arguments?.getStringArrayList("questions")
+        if (questions != null) {
+            val adapter = QuizAdapter(questions)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            submitButton.setOnClickListener {
+                val answers = adapter.getSelectedAnswers()
+                // Process the answers here
+            }
         }
     }
-
 }

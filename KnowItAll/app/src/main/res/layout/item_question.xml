@@ -1,21 +1,14 @@
-<!-- item_museum.xml -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="0dp">
 
     <TextView
-        android:id="@+id/textViewName"
+        android:id="@+id/textViewQuestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textViewAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="14sp" />
 
 </LinearLayout>

@@ -48,10 +48,7 @@ class MuseumFragment : Fragment() {
         adapter = MuseumAdapter()
         recyclerView.adapter = adapter
 
-        val configInputStream = resources.openRawResource(R.raw.config)
-        val properties = Properties()
-        properties.load(configInputStream)
-        randomString = properties.getProperty("string")
+        randomString = getString(R.string.random_string)
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
