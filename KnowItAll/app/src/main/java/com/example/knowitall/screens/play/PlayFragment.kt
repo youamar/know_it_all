@@ -6,21 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentPlayBinding
-import com.google.gson.annotations.SerializedName
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
 
 class PlayFragment : Fragment() {
     private lateinit var binding: FragmentPlayBinding
-    private lateinit var retrofit: Retrofit
-    private lateinit var wikiApi: WikiApiService
+    private lateinit var viewModel: PlayViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,10 +26,31 @@ class PlayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(this).get(PlayViewModel::class.java)
+
+        viewModel.randomContent.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let { randomContent ->
+                handleRandomContent(randomContent)
+            }
+        })
+
         binding.playButton.setOnClickListener {
             showLoadingView()
-            fetchRandomContent()
+            val context = requireContext().applicationContext
+            viewModel.fetchRandomContent(context)
         }
+
+        viewModel.navigateToErrorFragment.observe(viewLifecycleOwner, Observer { event ->
+            event.getContentIfNotHandled()?.let {
+                navigateToErrorFragment()
+            }
+        })
+    }
+
+    private fun navigateToErrorFragment() {
+        val navController = findNavController()
+        navController.navigate(R.id.action_playFragment_to_errorFragment)
     }
 
     private fun showLoadingView() {
@@ -48,71 +63,18 @@ class PlayFragment : Fragment() {
         binding.playButton.isEnabled = true
     }
 
-    private fun fetchRandomContent() {
-        retrofit = Retrofit.Builder()
-            .baseUrl("https://en.wikipedia.org")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        wikiApi = retrofit.create(WikiApiService::class.java)
-
-        wikiApi.fetchRandomContent().enqueue(object : Callback<RandomContentResponse> {
-            override fun onFailure(call: Call<RandomContentResponse>, t: Throwable) {
-                requireActivity().runOnUiThread {
-                    hideLoadingView()
-                    findNavController().navigate(R.id.action_playFragment_to_errorFragment)
-                }
+    private fun handleRandomContent(randomContent: TitleAndContent) {
+        if (randomContent.content.length >= 1500) {
+            hideLoadingView()
+            val bundle = Bundle().apply {
+                putString("title", randomContent.title)
+                putString("content", randomContent.content)
             }
-
-            override fun onResponse(call: Call<RandomContentResponse>, response: Response<RandomContentResponse>) {
-                if (response.isSuccessful) {
-                    val responseData = response.body()?.query?.pages?.values?.first()
-                    val titleAndContent = responseData?.let { parseResponse(it) }
-
-                    if ((titleAndContent?.content?.length ?: 0) >= 1500) {
-                        // Update UI on the main thread
-                        requireActivity().runOnUiThread {
-                            hideLoadingView() // Hide the loading view before navigating
-                            val bundle = Bundle().apply {
-                                putString("title", titleAndContent?.title)
-                                putString("content", titleAndContent?.content)
-                            }
-                            findNavController().navigate(R.id.action_playFragment_to_contentFragment, bundle)
-                        }
-                    } else {
-                        fetchRandomContent()
-                    }
-                } else {
-                    onFailure(call, Throwable("Unsuccessful response"))
-                }
-            }
-        })
+            findNavController().navigate(R.id.action_playFragment_to_contentFragment, bundle)
+        } else {
+            viewModel.fetchRandomContent(requireContext().applicationContext)
+        }
     }
 
-    private fun parseResponse(responseData: RandomContentResponseData): TitleAndContent {
-        val title = responseData.title
-        val content = responseData.extract
-
-        return TitleAndContent(title, content)
-    }
-
-    private data class TitleAndContent(val title: String, val content: String)
-
-    interface WikiApiService {
-        @GET("/w/api.php?action=query&format=json&generator=random&grnnamespace=0&grnlimit=1&prop=extracts&exintro=1&explaintext=1")
-        fun fetchRandomContent(): Call<RandomContentResponse>
-    }
-
-    data class RandomContentResponse(
-        @SerializedName("query") val query: RandomContentResponseQuery
-    )
-
-    data class RandomContentResponseQuery(
-        @SerializedName("pages") val pages: Map<String, RandomContentResponseData>
-    )
-
-    data class RandomContentResponseData(
-        @SerializedName("title") val title: String,
-        @SerializedName("extract") val extract: String
-    )
+    data class TitleAndContent(val title: String, val content: String)
 }

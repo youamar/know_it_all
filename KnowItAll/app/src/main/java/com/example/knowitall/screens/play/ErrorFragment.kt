@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 
 class ErrorFragment : Fragment() {
@@ -19,6 +20,8 @@ class ErrorFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        val actionBar = (activity as MainActivity).supportActionBar
+        actionBar?.setDisplayHomeAsUpEnabled(false)
         super.onViewCreated(view, savedInstanceState)
         val okButton = view.findViewById<Button>(R.id.okButton)
         okButton.setOnClickListener {

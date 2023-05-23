@@ -59,7 +59,19 @@ class ContentFragment : Fragment() {
                 }
                 view.post {
                     hideLoadingView()
-                    findNavController().navigate(R.id.action_contentFragment_to_quizFragment, bundle)
+                    if (generatedQuestions.isNotEmpty()) {
+                        try {
+                            findNavController().navigate(R.id.action_contentFragment_to_quizFragment, bundle)
+                        } catch (exception: IllegalArgumentException) {
+                            exception.printStackTrace()
+                        }
+                    } else {
+                        try {
+                            findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
+                        } catch (exception: IllegalArgumentException) {
+                            exception.printStackTrace()
+                        }
+                    }
                 }
             }
         }
@@ -101,7 +113,11 @@ class ContentFragment : Fragment() {
             override fun onFailure(call: Call, e: IOException) {
                 requireActivity().runOnUiThread {
                     hideLoadingView()
-                    findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
+                    try {
+                        findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
+                    } catch (exception: IllegalArgumentException) {
+                        exception.printStackTrace()
+                    }
                 }
                 callback.invoke(emptyList())
             }
@@ -125,12 +141,15 @@ class ContentFragment : Fragment() {
                 } catch (e: JSONException) {
                     requireActivity().runOnUiThread {
                         hideLoadingView()
-                        findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
+                        try {
+                            findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
+                        } catch (exception: IllegalArgumentException) {
+                            exception.printStackTrace()
+                        }
                     }
                     callback.invoke(emptyList())
                 }
             }
-
         })
     }
 
