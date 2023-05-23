@@ -11,20 +11,28 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import com.example.knowitall.MainActivity
 import com.example.knowitall.R
-import okhttp3.*
+import com.google.gson.annotations.SerializedName
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.OkHttpClient
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONException
 import org.json.JSONObject
-import java.io.IOException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
+import retrofit2.http.Header
+import retrofit2.http.POST
 
 class ContentFragment : Fragment() {
     private lateinit var contentText: TextView
-    private lateinit var okHttpClient: OkHttpClient
     private lateinit var questions: List<String>
     private var numQuestions = 5
     private var numAnswers = 3
     private lateinit var loadingView: RelativeLayout
+    private lateinit var openAiApi: OpenAiApi
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,7 +41,15 @@ class ContentFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_content, container, false)
         contentText = view.findViewById(R.id.contentText)
         loadingView = view.findViewById(R.id.loadingView)
-        okHttpClient = OkHttpClient()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.openai.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(OkHttpClient())
+            .build()
+
+        openAiApi = retrofit.create(OpenAiApi::class.java)
+
         return view
     }
 
@@ -84,7 +100,6 @@ class ContentFragment : Fragment() {
         numAnswers: Int,
         callback: (List<String>) -> Unit
     ) {
-        val url = "https://api.openai.com/v1/completions"
         val prompt = "Assume the format of each question should start with a numeric question " +
                 "number, followed by the question text, and then options A, B, and C with their " +
                 "respective answers, ex : 1.what is your name ? (new line) A.not (new line) B.your " +
@@ -102,15 +117,14 @@ class ContentFragment : Fragment() {
 
         val requestBody =
             jsonObject.toString().toRequestBody("application/json".toMediaTypeOrNull())
-        val randomString = getString(R.string.random_string3)
-        val request = Request.Builder()
-            .url(url)
-            .header("Authorization", "Bearer $randomString")
-            .post(requestBody)
-            .build()
 
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
+        val call = openAiApi.generateCompletions(
+            "Bearer ${getString(R.string.random_string3)}",
+            requestBody
+        )
+
+        call.enqueue(object : Callback<ApiResponse> {
+            override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
                 requireActivity().runOnUiThread {
                     hideLoadingView()
                     try {
@@ -122,31 +136,21 @@ class ContentFragment : Fragment() {
                 callback.invoke(emptyList())
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                val responseBody = response.body?.string()
-                try {
-                    val responseObject = JSONObject(responseBody)
-
-                    val choicesArray = responseObject.getJSONArray("choices")
-                    if (choicesArray.length() > 0) {
+            override fun onResponse(call: Call<ApiResponse>, response: Response<ApiResponse>) {
+                val apiResponse = response.body()
+                if (apiResponse != null) {
+                    val choices = apiResponse.choices
+                    if (choices.isNotEmpty()) {
                         val generatedQuestions = mutableListOf<String>()
-                        for (i in 0 until choicesArray.length()) {
-                            val question = choicesArray.getJSONObject(i).getString("text")
+                        for (choice in choices) {
+                            val question = choice.text
                             generatedQuestions.add(question)
                         }
                         callback.invoke(generatedQuestions)
                     } else {
                         callback.invoke(emptyList())
                     }
-                } catch (e: JSONException) {
-                    requireActivity().runOnUiThread {
-                        hideLoadingView()
-                        try {
-                            findNavController().navigate(R.id.action_contentFragment_to_errorFragment)
-                        } catch (exception: IllegalArgumentException) {
-                            exception.printStackTrace()
-                        }
-                    }
+                } else {
                     callback.invoke(emptyList())
                 }
             }
@@ -160,4 +164,20 @@ class ContentFragment : Fragment() {
     private fun hideLoadingView() {
         loadingView.visibility = View.GONE
     }
+    interface OpenAiApi {
+        @POST("completions")
+        fun generateCompletions(
+            @Header("Authorization") authorization: String,
+            @Body requestBody: RequestBody
+        ): Call<ApiResponse>
+    }
+    data class ApiResponse(
+        @SerializedName("choices")
+        val choices: List<Choice>
+    )
+
+    data class Choice(
+        @SerializedName("text")
+        val text: String
+    )
 }
