@@ -22,6 +22,7 @@ import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
 import java.util.*
+import java.util.Properties
 
 class MuseumFragment : Fragment() {
 
@@ -56,7 +57,10 @@ class MuseumFragment : Fragment() {
         editTextArea.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {fetchMuseums(s.toString())}
+            override fun afterTextChanged(s: Editable?) {
+                val area = s.toString()
+                fetchMuseums(area = area)
+            }
         })
 
         return view
@@ -78,14 +82,6 @@ class MuseumFragment : Fragment() {
                     val latitude = it.latitude
                     val longitude = it.longitude
                     fetchMuseums(latitude = latitude, longitude = longitude)
-
-                    val geocoder = Geocoder(requireContext(), Locale.getDefault())
-                    val addresses = geocoder.getFromLocation(latitude, longitude, 1)
-                    if (addresses != null && addresses.isNotEmpty()) {
-                        val address = addresses[0].getAddressLine(0)
-                        val editTextArea = binding.editTextArea
-                        editTextArea.setText(address)
-                    }
                 }
             }
             .addOnFailureListener {}
@@ -114,7 +110,7 @@ class MuseumFragment : Fragment() {
                 museumsList.add(museum)
             }
             // Update the UI
-            activity?.runOnUiThread {updateRecyclerView(museumsList)}
+            activity?.runOnUiThread { updateRecyclerView(museumsList) }
         }.start()
 
         // Pass the list of museums to the adapter
