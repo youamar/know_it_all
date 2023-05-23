@@ -73,15 +73,15 @@
         android:name="com.example.knowitall.screens.quiz.QuizFragment"
         android:label="Quiz" >
         <action
-            android:id="@+id/action_quizFragment_to_tomorrowFragment"
-            app:destination="@id/tomorrowFragment" />
+            android:id="@+id/action_quizFragment_to_sentFragment"
+            app:destination="@id/sentFragment" />
     </fragment>
     <fragment
-        android:id="@+id/tomorrowFragment"
-        android:name="com.example.knowitall.screens.quiz.TomorrowFragment"
-        tools:layout="@layout/fragment_tomorrow">
+        android:id="@+id/sentFragment"
+        android:name="com.example.knowitall.screens.quiz.SentFragment"
+        tools:layout="@layout/fragment_sent">
         <action
-            android:id="@+id/action_tomorrowFragment_to_loginFragment"
+            android:id="@+id/action_sentFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
     </fragment>
     <fragment

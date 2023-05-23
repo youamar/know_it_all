@@ -22,7 +22,6 @@ import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
 import java.util.*
-import java.util.Properties
 
 class MuseumFragment : Fragment() {
 

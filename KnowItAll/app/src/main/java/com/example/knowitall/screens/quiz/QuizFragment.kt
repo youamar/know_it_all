@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.knowitall.MainActivity
@@ -38,7 +39,7 @@ class QuizFragment : Fragment() {
 
             submitButton.setOnClickListener {
                 val answers = adapter.getSelectedAnswers()
-                // Process the answers here
+                findNavController().navigate(R.id.action_quizFragment_to_sentFragment)
             }
         }
     }
