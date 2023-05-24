@@ -9,40 +9,52 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.knowitall.R
 
-class QuizAdapter(private val questions: List<String>) :
-    RecyclerView.Adapter<QuizAdapter.ViewHolder>() {
+class QuizAdapter(
+    private val questions: List<String>,
+    private val answerSelectionListener: AnswerSelectionListener,
+    private val questionIndex: Int
+) : RecyclerView.Adapter<QuizAdapter.ViewHolder>() {
 
     private val selectedAnswers = mutableMapOf<Int, String>()
     private val nbQuestions = 5
     private val nbAnswers = 3
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_question, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_question, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val question = questions[position]
-        val quiz = question.substringAfter("\n").split("\n")
-        holder.bind(quiz)
+        holder.bind(question, questionIndex + position)
     }
 
     override fun getItemCount(): Int {
         return questions.size
     }
 
-    fun getSelectedAnswers(): Map<Int, String> {
-        return selectedAnswers
+    fun getContent(): String {
+        val contentBuilder = StringBuilder()
+        for (question in questions) {
+            contentBuilder.append(question).append("\n")
+        }
+        return contentBuilder.toString()
+    }
+
+    interface AnswerSelectionListener {
+        fun onAnswerSelected(questionIndex: Int, selectedAnswer: String)
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(quiz: List<String>) {
+        fun bind(question: String, position: Int) {
+            val quiz = question.substringAfter("\n").split("\n")
             val questionList = mutableListOf<String>()
             val answersList = mutableListOf<List<String>>()
 
             for (i in 1 until quiz.size step nbQuestions) {
-                val question = quiz[i]
-                questionList.add(question)
+                val q = quiz[i]
+                questionList.add(q)
             }
 
             for (i in 2 until quiz.size step nbQuestions) {
@@ -60,13 +72,21 @@ class QuizAdapter(private val questions: List<String>) :
             parentView.removeAllViews() // Clear existing views
 
             for (index in questionList.indices) {
-                val questionView =
-                    layoutInflater.inflate(R.layout.item_question, parentView, false)
-                val questionTextView: TextView = questionView.findViewById(R.id.questionTextView)
-                val radioGroupAnswers: RadioGroup = questionView.findViewById(R.id.radioGroupAnswers)
-                val radioButton1: RadioButton = questionView.findViewById(R.id.radioButton1)
-                val radioButton2: RadioButton = questionView.findViewById(R.id.radioButton2)
-                val radioButton3: RadioButton = questionView.findViewById(R.id.radioButton3)
+                val questionView = layoutInflater.inflate(
+                    R.layout.item_question,
+                    parentView,
+                    false
+                )
+                val questionTextView: TextView =
+                    questionView.findViewById(R.id.questionTextView)
+                val radioGroupAnswers: RadioGroup =
+                    questionView.findViewById(R.id.radioGroupAnswers)
+                val radioButton1: RadioButton =
+                    questionView.findViewById(R.id.radioButton1)
+                val radioButton2: RadioButton =
+                    questionView.findViewById(R.id.radioButton2)
+                val radioButton3: RadioButton =
+                    questionView.findViewById(R.id.radioButton3)
 
                 questionTextView.text = questionList[index]
 
@@ -81,11 +101,11 @@ class QuizAdapter(private val questions: List<String>) :
                         R.id.radioButton3 -> radioButton3.text.toString()
                         else -> ""
                     }
-                    selectedAnswers[adapterPosition] = selectedAnswer
+                    selectedAnswers[position] = selectedAnswer
+                    answerSelectionListener.onAnswerSelected(position, selectedAnswer)
                 }
                 parentView.addView(questionView)
             }
         }
-
     }
 }
