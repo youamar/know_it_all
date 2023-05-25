@@ -2,7 +2,6 @@ package com.example.knowitall.screens.museums
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
 import android.text.Editable
@@ -21,8 +20,6 @@ import com.google.android.gms.location.LocationServices
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
-import java.util.*
-import java.util.Properties
 
 class MuseumFragment : Fragment() {
 
@@ -128,4 +125,9 @@ class MuseumFragment : Fragment() {
     private fun updateRecyclerView(museumsList: List<Museum>) {
         adapter.submitList(museumsList)
     }
+
+    data class Museum(
+        val name: String,
+        val address: String
+    )
 }

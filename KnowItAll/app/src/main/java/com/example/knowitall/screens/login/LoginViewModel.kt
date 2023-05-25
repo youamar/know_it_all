@@ -45,6 +45,14 @@ class LoginViewModel(private val context: Context) : ViewModel() {
         Log.i("LoginViewModel", "LoginViewModel destroyed!")
     }
 
+    fun getLatestLogin(): UserLogin? {
+        return dao.getLatestLogin()
+    }
+
+    fun updateUserLogin(userLogin: UserLogin) {
+        dao.update(userLogin)
+    }
+
     fun validateEmail(email: String){
         _email.value = email
         val currentTime = Calendar.getInstance().time

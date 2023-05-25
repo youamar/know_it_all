@@ -1,17 +1,20 @@
 package com.example.knowitall.screens.quiz
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RelativeLayout
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.knowitall.MainActivity
 import com.example.knowitall.R
+import com.example.knowitall.screens.login.LoginViewModel
+import com.example.knowitall.screens.login.LoginViewModelFactory
 import com.google.gson.annotations.SerializedName
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
@@ -34,12 +37,15 @@ class QuizFragment : Fragment() {
     private val selectedAnswers = mutableMapOf<Int, String>()
     private var questions: ArrayList<String>? = null
     private var questionIndex: Int = 0
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var loadingView: RelativeLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_quiz, container, false)
+        loadingView = view.findViewById(R.id.loadingView)
         recyclerView = view.findViewById(R.id.quizRecyclerView)
         submitButton = view.findViewById(R.id.submitButton)
         val retrofit = Retrofit.Builder()
@@ -59,6 +65,8 @@ class QuizFragment : Fragment() {
         // Assign the questions to the member variable
         questions = arguments?.getStringArrayList("questions")
 
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(requireContext())).get(LoginViewModel::class.java)
+
         // Check if the questions are available
         if (questions != null) {
             val adapter = QuizAdapter(questions!!, object : QuizAdapter.AnswerSelectionListener {
@@ -70,6 +78,7 @@ class QuizFragment : Fragment() {
             recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
             submitButton.setOnClickListener {
+                showLoadingView()
                 val content = adapter.getContent()
                 getCorrectAnswers(content) { correctAnswers ->
                     val cleanedAnswers = correctAnswers.mapIndexedNotNull { index, answer ->
@@ -87,6 +96,7 @@ class QuizFragment : Fragment() {
                     }
                     val allSelectedAnswers = adapter.getSelectedAnswerAndQuestion()
                     val uniqueAnswers = mutableListOf<List<String>>()
+                    val nbQuestions = adapter.getNbQuestions()
 
                     // Iterate over the answers from the back
                     for (i in allSelectedAnswers.size - 1 downTo 0) {
@@ -106,36 +116,60 @@ class QuizFragment : Fragment() {
                     uniqueAnswers.sortBy { it[0] }
                     val ans = uniqueAnswers.map { it[1] }
 
-                    var xp = 0
-                    for (i in ans.indices) {
-                        if (i < cleanedAnswers.size) {  // Check if the index is within bounds
-                            val cleanedAnswerWithoutSpaces = cleanedAnswers[i].replace(" ", "")
-                            val ansWithoutSpaces = ans[i].replace(" ", "")
 
-                            if (ansWithoutSpaces == cleanedAnswerWithoutSpaces) {
-                                xp += 10
-                            }
+                    if (cleanedAnswers.size < nbQuestions) {
+                        // Resend the request to the API
+                        getCorrectAnswers(content) { updatedCorrectAnswers ->
+                            updatedCorrectAnswers.isNotEmpty()
+                            hideLoadingView()
+                            findNavController().navigate(R.id.action_quizFragment_to_errorFragment)
                         }
-                    }
-
-                    Log.d("Selected Answers", "$ans")
-                    Log.d("Correct Answers", "$cleanedAnswers")
-                    Log.d("XP", "$xp")
-                    if(cleanedAnswers.isEmpty()){
-                        findNavController().navigate(R.id.action_quizFragment_to_errorFragment)
-                    }
-                    else{
+                    } else {
+                        hideLoadingView()
                         findNavController().navigate(R.id.action_quizFragment_to_sentFragment)
                     }
+                    val xp = calculateXP(ans, cleanedAnswers)
+                    updateLatestUserXP(xp)
                 }
             }
 
         }
     }
 
+    private fun showLoadingView() {
+        loadingView.visibility = View.VISIBLE
+    }
+
+    private fun hideLoadingView() {
+        loadingView.visibility = View.GONE
+    }
+
+    private fun calculateXP(selectedAnswers: List<String>, correctAnswers: List<String>): Int {
+        var xp = 0
+        for (i in selectedAnswers.indices) {
+            if (i < correctAnswers.size) {  // Check if the index is within bounds
+                val cleanedAnswerWithoutSpaces = correctAnswers[i].replace(" ", "")
+                val ansWithoutSpaces = selectedAnswers[i].replace(" ", "")
+
+                if (ansWithoutSpaces == cleanedAnswerWithoutSpaces) {
+                    xp += 10
+                }
+            }
+        }
+        return xp
+    }
+
+    private fun updateLatestUserXP(xp: Int) {
+        val latestLogin = loginViewModel.getLatestLogin()
+        if (latestLogin != null) {
+            latestLogin.xp += xp
+            loginViewModel.updateUserLogin(latestLogin)
+        }
+    }
+
     private fun getCorrectAnswers(content: String, callback: (List<String>) -> Unit) {
-        val prompt = "Give me a list of the good answers for each question based on the exact" +
-                "following content (meaning don't add any words to the answers) example : A. This B. That:\n$content"
+        val prompt = "Give me a list of the good answers containing only the good answer for each question based on the exact" +
+                "following content without repeating the question itself (meaning don't add any words to the answers) example : A. This B. That:\n$content"
         val maxTokens = 300
         val temperature = 0.8
 

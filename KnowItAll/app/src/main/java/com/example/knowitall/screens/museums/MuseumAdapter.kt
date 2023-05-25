@@ -40,4 +40,9 @@ class MuseumAdapter : RecyclerView.Adapter<MuseumAdapter.MuseumViewHolder>() {
             textViewAddress.text = museum.address
         }
     }
+
+    data class Museum(
+        val name: String,
+        val address: String
+    )
 }

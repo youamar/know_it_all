@@ -1,23 +1,25 @@
-# Projet MOBG6
+# MOBG6 Project
 
-Ce dépôt contient les sources du projet KnowItAll.
+This repository contains the sources of the KnowItAll project.
 
 ## Description
 
-KnowItAll est l'application de quiz ultime conçue pour tester et élargir vos connaissances générales.
-On vous présentera un nouveau jeu-questionnaire, une information factuelle ou aléatoire qui vous aidera à apprendre quelque chose de nouveau et de fascinant.
-Qu'il s'agisse d'animaux, d'histoire, d'art, de science ou de culture, vous ne manquerez jamais de choses à découvrir.
+KnowItAll is the ultimate quiz app designed to test and expand your general knowledge.
+You will be presented with a new quiz, factual or random information that will help you learn something new and fascinating.
+Whether it's animals, history, art, science or culture, you'll never run out of things to discover.
 
-## Persistance des données
+## Data persistence
 
-Une liste des dernières connexions est stockée localement dans l'appareil.
+A list of the last connections as well as the player's experience is stored locally in the device.
 
 ## Backend
 
+The backend of the KnowItAll app is responsible for handling the interaction with the OpenAI API and processing the generated quiz questions and their correct answers.
 
 ## Service rest
 
+To retrieve the content to read (from wikipedia's api), KnowItAll utilizes Retrofit, a type-safe REST client for Android. Retrofit aims to simplify the consumption of RESTful web services, making it easier and more efficient.
 
-## Auteur
+## Author
 
 - 54915 - Yahya OUAMAR

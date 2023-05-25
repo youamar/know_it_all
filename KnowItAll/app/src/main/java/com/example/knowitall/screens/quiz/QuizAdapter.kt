@@ -47,6 +47,10 @@ class QuizAdapter(
         return contentBuilder.toString()
     }
 
+    fun getNbQuestions(): Int {
+        return nbQuestions
+    }
+
     interface AnswerSelectionListener {
         fun onAnswerSelected(questionIndex: Int, selectedAnswer: String)
     }
