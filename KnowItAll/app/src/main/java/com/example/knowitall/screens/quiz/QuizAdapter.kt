@@ -16,6 +16,7 @@ class QuizAdapter(
 ) : RecyclerView.Adapter<QuizAdapter.ViewHolder>() {
 
     private val selectedAnswers = mutableMapOf<Int, String>()
+    private val selectedAnswerAndQuestion = mutableListOf<List<String>>()
     private val nbQuestions = 5
     private val nbAnswers = 3
 
@@ -32,6 +33,10 @@ class QuizAdapter(
 
     override fun getItemCount(): Int {
         return questions.size
+    }
+
+    fun getSelectedAnswerAndQuestion(): List<List<String>> {
+        return selectedAnswerAndQuestion
     }
 
     fun getContent(): String {
@@ -53,18 +58,29 @@ class QuizAdapter(
             val answersList = mutableListOf<List<String>>()
 
             for (i in 1 until quiz.size step nbQuestions) {
-                val q = quiz[i]
-                questionList.add(q)
+                if (i < quiz.size) {
+                    val q = quiz[i]
+                    questionList.add(q)
+                } else {
+                    return  // Stop further execution
+                }
             }
 
             for (i in 2 until quiz.size step nbQuestions) {
-                val answers = mutableListOf<String>()
-                for (j in i until i + nbAnswers) {
-                    val answer = quiz[j]
-                    answers.add(answer)
+                if (i < quiz.size) {
+                    val answers = mutableListOf<String>()
+                    for (j in i until i + nbAnswers) {
+                        if (j < quiz.size) {
+                            val answer = quiz[j]
+                            answers.add(answer)
+                        } else {
+                            return  // Stop further execution
+                        }
+                    }
+                    answersList.add(answers)
                 }
-                answersList.add(answers)
             }
+
 
             val layoutInflater = LayoutInflater.from(itemView.context)
             val parentView = itemView as ViewGroup
@@ -103,6 +119,7 @@ class QuizAdapter(
                     }
                     selectedAnswers[position] = selectedAnswer
                     answerSelectionListener.onAnswerSelected(position, selectedAnswer)
+                    selectedAnswerAndQuestion.add(listOf(questionList[index], selectedAnswer))
                 }
                 parentView.addView(questionView)
             }

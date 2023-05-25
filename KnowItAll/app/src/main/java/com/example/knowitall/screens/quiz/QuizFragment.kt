@@ -85,9 +85,48 @@ class QuizFragment : Fragment() {
                             null
                         }
                     }
-                    Log.d("Selected Answers", "$selectedAnswers")
+                    val allSelectedAnswers = adapter.getSelectedAnswerAndQuestion()
+                    val uniqueAnswers = mutableListOf<List<String>>()
+
+                    // Iterate over the answers from the back
+                    for (i in allSelectedAnswers.size - 1 downTo 0) {
+                        val answer = allSelectedAnswers[i]
+                        val firstElement = answer[0]
+
+                        // Check if the answer with the same first element already exists in uniqueAnswers
+                        val exists = uniqueAnswers.any { it[0] == firstElement }
+
+                        if (!exists) {
+                            // Add the answer to uniqueAnswers if it's not a duplicate
+                            uniqueAnswers.add(answer)
+                        }
+                    }
+                    // Reverse uniqueAnswers to maintain the original order
+                    uniqueAnswers.reverse()
+                    uniqueAnswers.sortBy { it[0] }
+                    val ans = uniqueAnswers.map { it[1] }
+
+                    var xp = 0
+                    for (i in ans.indices) {
+                        if (i < cleanedAnswers.size) {  // Check if the index is within bounds
+                            val cleanedAnswerWithoutSpaces = cleanedAnswers[i].replace(" ", "")
+                            val ansWithoutSpaces = ans[i].replace(" ", "")
+
+                            if (ansWithoutSpaces == cleanedAnswerWithoutSpaces) {
+                                xp += 10
+                            }
+                        }
+                    }
+
+                    Log.d("Selected Answers", "$ans")
                     Log.d("Correct Answers", "$cleanedAnswers")
-                    findNavController().navigate(R.id.action_quizFragment_to_sentFragment)
+                    Log.d("XP", "$xp")
+                    if(cleanedAnswers.isEmpty()){
+                        findNavController().navigate(R.id.action_quizFragment_to_errorFragment)
+                    }
+                    else{
+                        findNavController().navigate(R.id.action_quizFragment_to_sentFragment)
+                    }
                 }
             }
 
@@ -96,7 +135,7 @@ class QuizFragment : Fragment() {
 
     private fun getCorrectAnswers(content: String, callback: (List<String>) -> Unit) {
         val prompt = "Give me a list of the good answers for each question based on the exact" +
-                "following content (meaning don't add any words to the answers):\n$content"
+                "following content (meaning don't add any words to the answers) example : A. This B. That:\n$content"
         val maxTokens = 300
         val temperature = 0.8
 
@@ -125,12 +164,12 @@ class QuizFragment : Fragment() {
                         callback(answers)
                     }
                 } else {
-                    Log.e("API Error", response.message())
+                    findNavController().navigate(R.id.action_quizFragment_to_errorFragment)
                 }
             }
 
             override fun onFailure(call: Call<ApiResponse>, t: Throwable) {
-                Log.e("API Error", t.localizedMessage ?: "Unknown error occurred")
+                findNavController().navigate(R.id.action_quizFragment_to_errorFragment)
             }
         })
     }
