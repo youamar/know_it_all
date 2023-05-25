@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentPlayBinding
 
@@ -26,6 +27,7 @@ class PlayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).showLoginFragment()
 
         viewModel = ViewModelProvider(this).get(PlayViewModel::class.java)
 

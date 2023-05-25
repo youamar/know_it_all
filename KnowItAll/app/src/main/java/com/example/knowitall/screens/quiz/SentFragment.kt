@@ -21,12 +21,14 @@ class SentFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as MainActivity).showLoginFragment()
         super.onViewCreated(view, savedInstanceState)
         val actionBar = (activity as MainActivity).supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(false)
         val okButton = view.findViewById<Button>(R.id.okButton)
         okButton.setOnClickListener {
             findNavController().navigate(R.id.action_sentFragment_to_loginFragment)
+            (activity as MainActivity).hideLoginFragment()
         }
     }
 

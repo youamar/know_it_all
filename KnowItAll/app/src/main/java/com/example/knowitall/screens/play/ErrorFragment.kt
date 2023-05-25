@@ -20,6 +20,7 @@ class ErrorFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        (activity as MainActivity).showLoginFragment()
         val actionBar = (activity as MainActivity).supportActionBar
         actionBar?.setDisplayHomeAsUpEnabled(false)
         super.onViewCreated(view, savedInstanceState)

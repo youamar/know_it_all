@@ -9,8 +9,10 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentLoginBinding
+
 class LoginFragment : Fragment() {
     private lateinit var viewModel: LoginViewModel
     private lateinit var binding: FragmentLoginBinding
@@ -44,6 +46,10 @@ class LoginFragment : Fragment() {
         viewModel.isValidEmail.observe(viewLifecycleOwner) { isValid ->
             if (isValid) {
                 Toast.makeText(requireContext(), R.string.valid_email, Toast.LENGTH_SHORT).show()
+                val actionBar = (activity as MainActivity).supportActionBar
+                actionBar?.setDisplayHomeAsUpEnabled(true)
+                // Hide the login fragment once the drawer layout is reestablished
+                (activity as MainActivity).hideLoginFragment()
             } else {
                 Toast.makeText(requireContext(), R.string.invalid_email, Toast.LENGTH_SHORT).show()
             }
@@ -53,5 +59,5 @@ class LoginFragment : Fragment() {
             viewModel.validateEmail(email)
         }
     }
-
 }
+

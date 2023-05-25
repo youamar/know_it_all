@@ -13,6 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentMuseumsBinding
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -126,8 +127,8 @@ class MuseumFragment : Fragment() {
         adapter.submitList(museumsList)
     }
 
-    data class Museum(
-        val name: String,
-        val address: String
-    )
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).showLoginFragment()
+    }
 }

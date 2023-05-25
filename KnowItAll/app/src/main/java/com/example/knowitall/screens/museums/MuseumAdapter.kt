@@ -41,8 +41,4 @@ class MuseumAdapter : RecyclerView.Adapter<MuseumAdapter.MuseumViewHolder>() {
         }
     }
 
-    data class Museum(
-        val name: String,
-        val address: String
-    )
 }

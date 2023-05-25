@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
+import com.example.knowitall.MainActivity
 import com.example.knowitall.R
 import com.example.knowitall.databinding.FragmentLogoutBinding
 
@@ -23,9 +24,10 @@ class LogoutFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as MainActivity).showLoginFragment()
         binding.logoutButton.setOnClickListener {
             findNavController().navigate(R.id.action_logout)
+            (activity as MainActivity).hideDrawerLayout()
         }
     }
-
 }

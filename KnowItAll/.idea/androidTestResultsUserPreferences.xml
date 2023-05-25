@@ -21,7 +21,9 @@
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
                 <map>
+                  <entry key="31111FDH2004TF" value="120" />
                   <entry key="Duration" value="90" />
+                  <entry key="Google&#10; Pixel 7" value="120" />
                   <entry key="Pixel_4_API_33" value="120" />
                   <entry key="Tests" value="360" />
                 </map>
