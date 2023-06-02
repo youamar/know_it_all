@@ -19,7 +19,3 @@ The backend of the KnowItAll app is responsible for handling the interaction wit
 ## Service rest
 
 To retrieve the content to read (from wikipedia's api), KnowItAll utilizes Retrofit, a type-safe REST client for Android. Retrofit aims to simplify the consumption of RESTful web services, making it easier and more efficient.
-
-## Author
-
-- 54915 - Yahya OUAMAR
